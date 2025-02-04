@@ -1,0 +1,34 @@
+{
+    "version": 3,
+    "port": 8080,
+    "name": "KrakenD request and response modifier demo",
+    "host": [
+        "https://api.github.com"
+    ],
+    "endpoints": [
+        {
+            "endpoint": "/github/orgs/{org}",
+            "backend": [
+                {
+                    "url_pattern": "/orgs/{org}",
+                    "allow": [
+                        "avatar_url",
+                        "blog",
+                        "followers"
+                    ],
+                    "mapping": {
+                        "blog": "website"
+                    },
+                    "group": "org"
+                },
+                {
+                    "url_pattern": "/orgs/{org}/repos",
+                    "mapping": {
+                        "collection": "repos"
+                    },
+                    "is_collection": true
+                }
+            ]
+        }
+    ]
+}

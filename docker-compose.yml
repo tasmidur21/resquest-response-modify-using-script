@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  hotel-service:
+    image: node:18-alpine
+    container_name: hotel-service
+    working_dir: /app
+    volumes:
+      - ./services/hotel-service:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install -g nodemon && npm install && nodemon index.js"
+    environment:
+      - PORT=3000
+
+  # plugin_builder:
+  #   build:
+  #     context: ./krakend-config/plugins
+  #     dockerfile: Dockerfile  # Ensure you have a Dockerfile in this directory
+  #   container_name: go_plugin_builder
+  #   volumes:
+  #     - ./krakend-config/plugins:/etc/krakend/plugins  # Share the plugins directory
+
+  krakend-gateway:
+    image: devopsfaith/krakend:watch
+    container_name: krakend-gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./krakend-config:/etc/krakend
+    depends_on:
+      - hotel-service
+    command: run -c /etc/krakend/propagation.json -d
