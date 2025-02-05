@@ -1,29 +1,28 @@
-const express = require("express");
+// hotel-service/index.js
+const express = require('express');
+const { hotels } = require('./data');
+
 const app = express();
+const PORT = 3001;
 
 app.use(express.json());
 
-// Sample API Endpoint
-app.get("/api/data", (req, res) => {
-    console.log("header",req.headers);
-    
-    res.json({ message: "Hello from Backend" });
+// Get all hotels
+app.get('/hotels', (req, res) => {
+  res.json(hotels);
 });
 
-// Endpoint to receive GitHub data from KrakenD
-app.post("/process-repos", (req, res) => {
-   try {
-    console.log("Received GitHub data from KrakenD:", req.headers);
-    res.json({
-        message: "Processed GitHub Repositories",
-        repositories: {}
-    });
-   } catch (error) {
-    res.json({
-        message: "Error processing GitHub Repositories",
-    })
-   }
+// Get hotel by ID
+app.get('/hotels/:id', (req, res) => {
+  const hotel = hotels.find(h => h.id === req.params.id);
+  if (hotel) {
+    res.json(hotel);
+  } else {
+    res.status(404).send('Hotel not found');
+  }
 });
 
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Hotel Service running on http://localhost:${PORT}`);
+});

@@ -1,43 +1,29 @@
 {
     "version": 3,
-    "port": 8080,
-    "name": "KrakenD request and response modifier demo",
-    "host": [
-        "https://api.github.com"
-    ],
+    "plugin": {
+      "pattern": ".so",
+      "folder": "./etc/krakend/plugins/"
+    },
     "endpoints": [
-        {
-            "endpoint": "/github/orgs/{org}",
-            "backend": [
-                {
-                    "url_pattern": "/orgs/{org}",
-                    "allow": [
-                        "avatar_url",
-                        "blog",
-                        "followers"
-                    ],
-                    "mapping": {
-                        "blog": "website"
-                    },
-                    "group": "source_result",
-                    "extra_config":{
-                        "modifier/lua-backend": {
-                            "sources": [
-                                "/etc/krakend/scripts/post_proxy_decorator.lua"
-                            ],
-                            "post": "print('Lua proxy post modifier'); post_proxy_decorator(response);"
-                        }
-                    }
-                    
-                },
-                {
-                    "url_pattern": "/orgs/{org}/repos",
-                    "mapping": {
-                        "collection": "repos"
-                    },
-                    "is_collection": true
+      {
+        "endpoint": "/test/{id}",
+        "backend": [
+          {
+            "host": [
+              "http://localhost:8080"
+            ],
+            "url_pattern": "/__debug/{id}",
+            "extra_config": {
+              "plugin/http-client": {
+                "name": "krakend-client-example",
+                "krakend-client-example": {
+                  "path": "/__debug/hijack-me"
                 }
-            ]
-        }
+              }
+            }
+          }
+        ]
+      }
     ]
-}
+  }
+  

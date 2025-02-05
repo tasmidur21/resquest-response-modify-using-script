@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  krakend:
+    image: devopsfaith/krakend:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./krakend.json:/etc/krakend/krakend.json
+      - ./krakend-client-example.so:/etc/krakend/krakend-client-example.so
+    command: ["run", "-dc", "/etc/krakend/krakend.json"]
+
+  builder:
+    image: krakend/builder:2.9.1
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["go", "build", "-buildmode=plugin", "-o", "krakend-client-example.so", "."]

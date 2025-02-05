@@ -1,5 +1,5 @@
 # Use the official Golang image as a build stage
-FROM golang:1.22 AS builder
+FROM devopsfaith/krakend:2.9 as builder
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -20,8 +20,4 @@ RUN go mod tidy
 # Build the Go app
 # RUN go build -buildmode=plugin -o modifier.so modifier.go
 RUN go build -buildmode=plugin -o myplugin.so myplugin.go
-# Use a minimal image to copy the plugin
-# FROM alpine:latest
 
-# # Copy the built plugin from the builder stage
-# COPY --from=builder /app/modifier.so /etc/krakend/plugins/modifier.so

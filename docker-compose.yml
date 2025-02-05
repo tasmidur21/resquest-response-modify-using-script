@@ -13,13 +13,13 @@ services:
     environment:
       - PORT=3000
 
-  # plugin_builder:
-  #   build:
-  #     context: ./krakend-config/plugins
-  #     dockerfile: Dockerfile  # Ensure you have a Dockerfile in this directory
-  #   container_name: go_plugin_builder
-  #   volumes:
-  #     - ./krakend-config/plugins:/etc/krakend/plugins  # Share the plugins directory
+  plugin_builder:
+    build:
+      context: ./krakend-config/plugins
+      dockerfile: Dockerfile  # Ensure you have a Dockerfile in this directory
+    container_name: go_plugin_builder
+    volumes:
+      - ./krakend-config/plugins:/etc/krakend/plugins  # Share the plugins directory
 
   krakend-gateway:
     image: devopsfaith/krakend:watch
