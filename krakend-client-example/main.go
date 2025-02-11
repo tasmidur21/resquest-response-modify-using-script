@@ -73,7 +73,7 @@ func (r registerer) registerClients(_ context.Context, extra map[string]interfac
 		if req.URL.Path == path {
 			w.Header().Add("Content-Type", "application/json")
 			// Return a custom JSON object:
-			res := map[string]string{"message": html.EscapeString(req.URL.Path)}
+			res := map[string]string{"message": "piyal"}
 			b, _ := json.Marshal(res)
 			w.Write(b)
 			logger.Debug("request:", html.EscapeString(req.URL.Path))
@@ -105,6 +105,10 @@ func (r registerer) registerClients(_ context.Context, extra map[string]interfac
 }
 
 func main() {}
+
+func init() {
+    fmt.Println("plugin-loaded!!!")
+}
 
 type Logger interface {
 	Debug(v ...interface{})

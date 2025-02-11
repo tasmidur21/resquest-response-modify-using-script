@@ -2,17 +2,31 @@ version: '3.8'
 
 services:
   krakend:
-    image: devopsfaith/krakend:latest
+    image: devopsfaith/krakend:watch
     ports:
       - "8080:8080"
     volumes:
-      - ./krakend.json:/etc/krakend/krakend.json
-      - ./krakend-client-example.so:/etc/krakend/krakend-client-example.so
-    command: ["run", "-dc", "/etc/krakend/krakend.json"]
+      - ./config:/etc/krakend
+      - ./plugins/krakend-client-example.so:/etc/krakend/krakend-client-example.so
+    command: ["run", "-dc", "/etc/krakend/body-modify.json"]
+    depends_on:
+      - hotel-service
 
   builder:
     image: krakend/builder:2.9.1
     volumes:
       - .:/app
     working_dir: /app
-    command: ["go", "build", "-buildmode=plugin", "-o", "krakend-client-example.so", "."]
+    command: ["go", "build", "-buildmode=plugin", "-o", "plugins/krakend-client-example.so", "."]
+  
+  hotel-service:
+    image: node:18-alpine
+    container_name: hotel-service
+    working_dir: /app
+    volumes:
+      - ./services/hotel-service:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install -g nodemon && npm install && nodemon index.js"
+    environment:
+      - PORT=3000

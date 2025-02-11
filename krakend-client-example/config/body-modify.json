@@ -1,0 +1,34 @@
+{
+    "version": 3,
+    "plugin": {
+      "pattern": ".so",
+      "folder": "./etc/krakend"
+    },
+    "endpoints": [
+      {
+        "endpoint": "/modify-request",
+        "method": "POST",
+        "backend": [
+          {
+            "url_pattern": "/backend-a",
+            "method": "POST",
+            "host": ["http://hotel-service:3000"],
+            "group": "first_backend"
+          },
+          {
+            "url_pattern": "/backend-b",
+            "method": "POST",
+            "host": ["http://hotel-service:3000"],
+            "group": "second_backend",
+            "extra_config": {
+              "modify_request": {
+                "body": {
+                  "new_field": "{{ .first_backend_response.some_field }}"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
